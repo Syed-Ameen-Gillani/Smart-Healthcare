@@ -6,12 +6,16 @@ import { toast } from "react-toastify";
 import { profileAPI, fileAPI } from "../utils/api";
 import HealthPlanGenerator from "../components/HealthPlanGenerator";
 import ReportAnalysisModal from "../components/ReportAnalysisModal";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { useSearchParams } from "react-router-dom";
 
 function Profile() {
+  const [searchParams] = useSearchParams();
   const [isEditing, setIsEditing] = useState(false);
-  const [activeSection, setActiveSection] = useState("about");
+  const [activeSection, setActiveSection] = useState(searchParams.get("section") === "reports" ? "reports" : "about");
+
+  useEffect(() => {
+    setActiveSection(searchParams.get("section") === "reports" ? "reports" : "about");
+  }, [searchParams]);
   const [values, setValues] = useState({
     name: "",
     age: "",
@@ -28,6 +32,7 @@ function Profile() {
   });
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [analysisData, setAnalysisData] = useState(null);
+  const [analysisFileId, setAnalysisFileId] = useState(null);
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   const [analyzingFileId, setAnalyzingFileId] = useState(null);
   
@@ -222,6 +227,7 @@ function Profile() {
     
     if (data.success) {
       setAnalysisData(data.data.analysis);
+      setAnalysisFileId(fileId);
       setShowAnalysisModal(true);
       toast.success("✅ Analysis complete!");
     } else {
@@ -717,16 +723,16 @@ const renderHealthSection = () => {
     <div className="w-full min-h-screen font-text bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-5">
         {/* Header */}
-        <div className="mb-8">
-          <div className="bg-gradient-to-r from-btn2 to-btn1 rounded-2xl p-8 shadow-xl text-white">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-3">My Profile</h1>
-            <p className="text-lg text-white/90">Manage your personal information and health data</p>
+        <div className="mb-4 md:mb-8">
+          <div className="bg-gradient-to-r from-btn2 to-btn1 rounded-lg md:rounded-2xl p-4 md:p-8 shadow-md md:shadow-xl text-white">
+            <h1 className="text-2xl md:text-5xl font-extrabold mb-1 md:mb-3">{activeSection === "reports" ? "Medical Reports" : "My Profile"}</h1>
+            <p className="text-sm md:text-lg text-white/90">{activeSection === "reports" ? "Upload reports and review AI-assisted analysis" : "Manage your personal information and health data"}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left side - Profile Card */}
-          <div className="lg:col-span-1">
+          <div className={`${activeSection === "reports" ? "hidden" : "block"} lg:block lg:col-span-1`}>
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl dark:shadow-gray-900/50 p-6 border-2 border-gray-100 dark:border-gray-700 sticky top-8 hover:shadow-3xl transition-all duration-300 overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-pink-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
@@ -776,8 +782,8 @@ const renderHealthSection = () => {
 
           {/* Right side */}
           <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl dark:shadow-gray-900/50 p-6 border-2 border-gray-100 dark:border-gray-700 hover:shadow-3xl transition-all duration-300">
-              <div className="flex mb-8 bg-gradient-to-r from-gray-50 via-gray-100 to-gray-50 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 p-1.5 rounded-2xl border border-gray-200 dark:border-gray-600">
+            <div className="bg-white dark:bg-gray-800 rounded-lg md:rounded-2xl shadow-sm md:shadow-2xl dark:shadow-gray-900/50 p-3 md:p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300">
+              <div className="flex mb-4 md:mb-8 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg border border-gray-200 dark:border-gray-600">
                 {[
                   { name: "about", icon: FaUser, label: "About" },
                   { name: "reports", icon: FaFileMedical, label: "Reports" },
@@ -786,7 +792,7 @@ const renderHealthSection = () => {
                   <button
                     key={name}
                     onClick={() => setActiveSection(name)}
-                    className={`flex-1 p-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
+                    className={`flex-1 p-2 md:p-4 rounded-lg font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
                       activeSection === name
                         ? "bg-gradient-to-r from-btn2 to-btn1 text-white shadow-xl scale-105"
                         : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-700"
@@ -809,6 +815,8 @@ const renderHealthSection = () => {
       {showAnalysisModal && (
         <ReportAnalysisModal 
           analysis={analysisData} 
+          fileId={analysisFileId}
+          city={values.city}
           onClose={() => setShowAnalysisModal(false)} 
         />
       )}

@@ -3,7 +3,9 @@
 .env.*
 backend/.env
 frontend/.env
+!frontend/.env.mobile.example
 livekit-agent/.env
+atlas-credentials.env
 
 # Python
 __pycache__/

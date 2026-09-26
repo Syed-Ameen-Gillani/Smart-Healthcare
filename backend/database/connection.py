@@ -46,6 +46,9 @@ async def create_indexes():
         await db.doctor_reviews.create_index(
             [("doctor_id", 1), ("email", 1)], unique=True
         )
+        await db.medicine_catalog.create_index("name")
+        await db.medicine_catalog.create_index([("active", 1), ("is_demo", 1)])
+        await db.medicine_orders.create_index([("email", 1), ("created_at", -1)])
         logger.info("Database indexes created")
     except Exception as e:
         logger.warning(f"Index creation warning: {e}")

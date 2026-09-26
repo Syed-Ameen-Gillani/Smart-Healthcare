@@ -85,7 +85,7 @@ async def register_user(user_data: Dict) -> Dict:
 
         token = create_access_token(user_data["email"])
 
-        logger.info(f"✅ User registered: {user_data['email']}")
+        logger.info("User registration succeeded")
 
         return {
             "success": True,
@@ -94,8 +94,8 @@ async def register_user(user_data: Dict) -> Dict:
             # ✅ FIX: Clean the data before returning
             "user": serialize_user_data(user_data),
         }
-    except Exception as e:
-        logger.error(f"Registration error: {e}")
+    except Exception:
+        logger.exception("User registration failed")
         return {"success": False, "message": "Registration failed"}
 
 
@@ -105,14 +105,16 @@ async def authenticate_user(email: str, password: str) -> Dict:
         user = await db.store.find_one({"email": email})
 
         if not user:
+            logger.warning("Authentication denied: account not found")
             return {"success": False, "message": "Invalid credentials"}
 
         if not verify_password(password, user["password"]):
+            logger.warning("Authentication denied: credentials did not match")
             return {"success": False, "message": "Invalid credentials"}
 
         token = create_access_token(email)
 
-        logger.info(f"✅ User authenticated: {email}")
+        logger.info("User authentication succeeded")
 
         return {
             "success": True,
@@ -121,8 +123,8 @@ async def authenticate_user(email: str, password: str) -> Dict:
             # ✅ FIX: Clean the data before returning
             "user": serialize_user_data(user),
         }
-    except Exception as e:
-        logger.error(f"Authentication error: {e}")
+    except Exception:
+        logger.exception("Authentication service failed")
         return {"success": False, "message": "Authentication failed"}
 
 

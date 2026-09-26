@@ -35,6 +35,7 @@ function NavBar() {
     { id: 15, name: t("nav.exportData"), link: "/export" },
     { id: 16, name: t("nav.security"), link: "/security" },
     { id: 17, name: t("nav.admin"), link: "/admin" },
+    { id: 18, name: "Demo Medicine Store", link: "/medicine-store" },
   ];
 
   const [isOpen, setIsOpen] = useState(false);

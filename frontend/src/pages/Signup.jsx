@@ -112,7 +112,7 @@ function Signup() {
     });
 
   return (
-    <div className="relative flex flex-col justify-center items-center w-full md:h-[600px] font-text h-[700px] mt-20 md:mt-0 dark:bg-gray-950 transition-colors duration-300">
+    <div className="native-auth-screen relative flex flex-col justify-center items-center w-full min-h-[100dvh] font-text px-4 py-6 md:py-8 dark:bg-gray-950 transition-colors duration-300">
       <div className="rounded-2xl shadow-xl shadow-gray-300 dark:shadow-gray-900/50 mx-10 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="">
           <h1 className="font-semibold capitalize text-4xl justify-center items-center flex p-4 text-lightText dark:text-gray-100">

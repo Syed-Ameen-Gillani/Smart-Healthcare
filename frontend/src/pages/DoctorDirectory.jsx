@@ -15,8 +15,9 @@ import {
   FaRupeeSign,
   FaTimes,
   FaChevronDown,
+  FaSlidersH,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 function StarRating({ rating, size = "text-sm" }) {
   const stars = [];
@@ -50,14 +51,15 @@ function InteractiveStarRating({ rating, setRating }) {
 }
 
 export default function DoctorDirectory() {
+  const [searchParams] = useSearchParams();
   const { loggedIn } = useAuth();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [specializations, setSpecializations] = useState([]);
   const [cities, setCities] = useState([]);
   const [filters, setFilters] = useState({
-    specialization: "",
-    city: "",
+    specialization: searchParams.get("specialization") || "",
+    city: searchParams.get("city") || "",
     search: "",
     sort_by: "avg_rating",
   });
@@ -67,6 +69,9 @@ export default function DoctorDirectory() {
   const [reviewComment, setReviewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [total, setTotal] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
+  const recommendationReason = searchParams.get("reason");
+  const sourceReport = searchParams.get("sourceReport");
 
   useEffect(() => {
     fetchDoctors();
@@ -184,6 +189,8 @@ export default function DoctorDirectory() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-[80px] pb-10 px-4 transition-colors duration-300">
+      {recommendationReason && <div className="max-w-6xl mx-auto mb-4 bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800 p-4 rounded-lg text-cyan-900 dark:text-cyan-100"><strong>Recommended from your report:</strong> {recommendationReason}</div>}
+      {sourceReport && <div className="max-w-6xl mx-auto mb-4 flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg"><span className="text-sm text-gray-700 dark:text-gray-200">Your analyzed report can also be referenced in a demonstration medicine order.</span><Link to={`/medicine-store?reportId=${encodeURIComponent(sourceReport)}`} className="bg-cyan-700 hover:bg-cyan-800 text-white px-4 py-2 rounded-lg font-semibold">Continue to Demo Store</Link></div>}
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -203,7 +210,7 @@ export default function DoctorDirectory() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="max-w-6xl mx-auto mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 p-6 dark:border dark:border-gray-700"
+        className="max-w-6xl mx-auto mb-5 md:mb-8 bg-white dark:bg-gray-800 rounded-lg md:rounded-2xl shadow-sm md:shadow-lg dark:shadow-gray-900/50 p-4 md:p-6 dark:border dark:border-gray-700"
       >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
@@ -217,7 +224,11 @@ export default function DoctorDirectory() {
             />
           </div>
 
-          <div className="relative">
+          <button type="button" onClick={() => setShowFilters(!showFilters)} className="md:hidden border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 flex items-center justify-center gap-2 font-semibold text-gray-700 dark:text-gray-200">
+            <FaSlidersH /> {showFilters ? "Hide Filters" : "Filters"}
+          </button>
+
+          <div className={`${showFilters ? "block" : "hidden"} md:block relative`}>
             <select
               value={filters.specialization}
               onChange={(e) => setFilters({ ...filters, specialization: e.target.value })}
@@ -231,7 +242,7 @@ export default function DoctorDirectory() {
             <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
           </div>
 
-          <div className="relative">
+          <div className={`${showFilters ? "block" : "hidden"} md:block relative`}>
             <select
               value={filters.city}
               onChange={(e) => setFilters({ ...filters, city: e.target.value })}
@@ -245,7 +256,7 @@ export default function DoctorDirectory() {
             <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
           </div>
 
-          <div className="relative">
+          <div className={`${showFilters ? "block" : "hidden"} md:block relative`}>
             <select
               value={filters.sort_by}
               onChange={(e) => setFilters({ ...filters, sort_by: e.target.value })}

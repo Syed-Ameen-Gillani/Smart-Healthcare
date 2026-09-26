@@ -67,8 +67,10 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
             "file_size": len(contents),
             "content_type": file.content_type,
             "uploaded_at": datetime.utcnow(),
-            "analyzed": False,  # ✅ ADD
-            "analysis": None,  # ✅ ADD
+            "analyzed": False,
+            "analysis": None,
+            "analysis_status": "pending",
+            "analysis_error": None,
         }
 
         result = await db.files.insert_one(file_data)
@@ -94,11 +96,21 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
                             "$set": {
                                 "analyzed": True,
                                 "analysis": analysis.get("analysis", {}),
+                                "analysis_status": "completed",
+                                "analysis_error": None,
+                                "analyzed_at": datetime.utcnow(),
                             }
                         },
                     )
                     logger.info(f"✅ Analysis complete: {file.filename}")
                 else:
+                    await db.files.update_one(
+                        {"_id": result.inserted_id},
+                        {"$set": {
+                            "analysis_status": "failed",
+                            "analysis_error": analysis.get("error", "Analysis failed"),
+                        }},
+                    )
                     logger.warning(f"⚠️ Analysis failed: {analysis.get('error')}")
             except Exception as e:
                 logger.error(f"❌ Analysis error: {e}")
@@ -233,7 +245,13 @@ async def get_file_analysis(request: Request, file_id: str):
 
         await db.files.update_one(
             {"_id": oid},
-            {"$set": {"analyzed": True, "analysis": analysis.get("analysis", {})}},
+            {"$set": {
+                "analyzed": True,
+                "analysis": analysis.get("analysis", {}),
+                "analysis_status": "completed",
+                "analysis_error": None,
+                "analyzed_at": datetime.utcnow(),
+            }},
         )
 
         logger.info(f"✅ Analysis complete: {file_doc['filename']}")

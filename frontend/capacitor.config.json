@@ -1,0 +1,8 @@
+{
+  "appId": "com.smarthealth.fyp",
+  "appName": "Smart Health",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  }
+}

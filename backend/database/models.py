@@ -199,3 +199,16 @@ class FamilyProfileUpdate(BaseModel):
     conditions: Optional[List[str]] = None
     medications: Optional[List[str]] = None
     notes: Optional[str] = Field(None, max_length=1000)
+
+
+class MedicineOrderItem(BaseModel):
+    medicine_id: str
+    quantity: int = Field(..., ge=1, le=10)
+
+
+class MedicineOrderCreate(BaseModel):
+    items: List[MedicineOrderItem] = Field(..., min_items=1, max_items=20)
+    report_id: Optional[str] = None
+    delivery_name: str = Field(..., min_length=2, max_length=100)
+    delivery_phone: str = Field(..., min_length=7, max_length=20)
+    delivery_address: str = Field(..., min_length=5, max_length=500)

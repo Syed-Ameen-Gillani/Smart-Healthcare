@@ -1,5 +1,38 @@
 # **AI Health Care Platform**
 
+> **Smart Health FYP:** This repository is an academic prototype. Its primary demonstration flow is sign in, upload a PDF or image report, review Gemini-assisted abnormalities, see a reasoned specialty recommendation, filter doctors by specialty and city, and submit a fictional medicine order. The analysis is decision support, not a diagnosis. Medicine orders do not involve payment, a real pharmacy, or fulfillment.
+
+## **FYP Quick Start**
+
+1. Configure the root `.env` with the MongoDB and Gemini backend values described below.
+2. Start FastAPI from the repository root using the existing backend command.
+3. In `frontend/`, install packages with `npm ci` and run the browser app with `npm run dev`.
+4. Sign in, open Profile, upload a PDF or image report, and run report analysis.
+5. Follow the report recommendation to the doctor directory, then continue to the Demo Medicine Store.
+
+The medicine catalog is idempotently initialized with clearly fictional data on its first authenticated request. Prescription-required demo items require a report owned by the signed-in user. Prices and totals are resolved by the backend.
+
+### Android build
+
+Create `frontend/.env.mobile` from `frontend/.env.mobile.example` and set `VITE_API_URL` to a reachable HTTPS FastAPI deployment. Vite embeds this URL in the APK, so do not place MongoDB or Gemini secrets in frontend environment files.
+
+```bash
+cd frontend
+npm ci
+npm run android:sync
+cd android
+gradlew.bat assembleDebug
+```
+
+The debug APK is produced under `frontend/android/app/build/outputs/apk/debug/`. Mobile authentication uses the backend access token in memory, so reopening the app requires login. Browser cookie behavior remains supported. The Capacitor WebView origin must be listed explicitly in backend CORS settings.
+
+### FYP scope
+
+- Included: account login, report upload/history/analysis, specialty mapping, doctor filtering, fictional medicine orders, and Android packaging.
+- External services remain behind FastAPI: MongoDB and Gemini credentials are never shipped in the APK.
+- Out of scope: clinical validation, emergency use, real prescriptions, payments, pharmacy fulfillment, and production security certification.
+- Real-device checks still required before presentation: PDF/image selection, upload, long-screen layout, Android Back behavior, report viewing/download, and the complete demo flow with the development server closed.
+
 ## **Project Overview**
 
 The **AI Health Care Platform** is a comprehensive health application that predicts diseases based on symptoms, provides AI-powered medical assistance, and manages health records. It uses machine learning models (**Random Forest**, **Naive Bayes**, **SVM**) for disease prediction and integrates **Google Gemini AI** for intelligent health consultations, medical report analysis, drug interaction checks, and personalized health plans.
@@ -20,7 +53,7 @@ The backend is built with **FastAPI** (async) and connects to **MongoDB** via th
 * **Medical Term Explainer** — Plain-language explanations of complex medical terminology via `/gemini/medical/explain/{term}`.
 * **Personalized Health Plans** — AI-generated 4-week health plans tailored to user profile and medical history, with print support.
 * **Voice-to-Text Symptom Input** — Hands-free symptom entry using the Web Speech API. Spoken words are fuzzy-matched against the 152-symptom list and auto-filled into the prediction form.
-* **Multi-Model Fallback** — Gemini service automatically falls back across 3 Gemini models (`gemini-2.5-flash`, `gemini-2.0-flash`, `gemini-2.0-flash-lite`) for high availability.
+* **Multi-Model Fallback** — Gemini service falls back across the configured current models (`gemini-3.5-flash-lite`, `gemini-3.5-flash`, `gemini-3.6-flash`) for availability.
 
 ### Medical Reports & Files
 

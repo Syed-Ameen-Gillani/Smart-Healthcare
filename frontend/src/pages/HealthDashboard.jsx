@@ -3,14 +3,21 @@ import { FaHeartbeat, FaFileMedical, FaCalendarCheck, FaChartBar, FaUser, FaStet
 import { healthAPI } from "../utils/api";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { IS_NATIVE } from "../utils/runtime";
 
 function HealthDashboard() {
+  const { loggedIn } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (IS_NATIVE && !loggedIn) {
+      setIsLoading(false);
+      return;
+    }
     fetchDashboardData();
-  }, []);
+  }, [loggedIn]);
 
   const fetchDashboardData = async () => {
     setIsLoading(true);
@@ -67,6 +74,35 @@ function HealthDashboard() {
     return { status: "Needs Attention", color: "#ef4444", icon: "🚨" };
   };
 
+  if (IS_NATIVE && !loggedIn) {
+    const guestFeatures = [
+      ["Medical Reports", "/profile?section=reports", FaFileMedical, "Upload and analyze PDF or image reports after signing in."],
+      ["Find Doctors", "/doctors", FaStethoscope, "Explore specialists and city-based doctor discovery."],
+      ["Demo Store", "/medicine-store", FaHeartbeat, "Browse the fictional medicine-order demonstration."],
+      ["Health Tools", "/tools", FaChartBar, "Explore calculators and AI-assisted health tools."],
+      ["Appointments", "/book", FaCalendarAlt, "Review the appointment booking experience."],
+      ["More Features", "/more", FaUser, "Open medications, timeline, family, articles, settings, and more."],
+    ];
+    return (
+      <main className="app-page bg-gray-50 dark:bg-gray-950">
+        <div className="app-page__inner max-w-4xl">
+          <section className="bg-cyan-800 text-white rounded-lg p-5 mb-5">
+            <p className="text-sm font-bold text-cyan-100">SMART HEALTH</p>
+            <h1 className="text-2xl font-bold mt-1">Explore the FYP application</h1>
+            <p className="text-sm text-cyan-100 mt-2">Browse every feature as a guest. Sign in when you want to use personal reports, history, or submissions.</p>
+            <Link to="/login" className="inline-flex min-h-11 items-center mt-4 bg-white text-cyan-800 px-4 py-2 rounded-lg font-bold">Sign in</Link>
+          </section>
+          <section aria-labelledby="guest-features-title">
+            <h2 id="guest-features-title" className="text-lg font-bold text-gray-900 dark:text-white mb-3">Explore features</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {guestFeatures.map(([title, to, Icon, description]) => <Link key={title} to={to} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 flex gap-3 min-h-28"><span className="w-11 h-11 rounded-lg bg-cyan-50 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 grid place-items-center shrink-0"><Icon /></span><span><strong className="block text-gray-900 dark:text-white">{title}</strong><span className="block text-sm text-gray-500 dark:text-gray-400 mt-1">{description}</span></span></Link>)}
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
@@ -102,19 +138,20 @@ function HealthDashboard() {
       <div className="max-w-7xl mx-auto px-5">
         {/* Header */}
         <div className="mb-10 animate-fadeIn">
-          <div className="bg-gradient-to-r from-btn2 to-btn1 rounded-2xl p-8 shadow-xl text-white relative overflow-hidden">
+          <div className="bg-gradient-to-r from-btn2 to-btn1 rounded-lg md:rounded-2xl p-5 md:p-8 shadow-md md:shadow-xl text-white relative overflow-hidden">
             {/* Decorative Elements */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
             
             <div className="relative z-10">
-              <h1 className="text-5xl font-bold mb-3 flex items-center gap-3">
+              <h1 className="text-2xl md:text-5xl font-bold mb-2 md:mb-3 flex items-center gap-3">
                 <FaHeartbeat className="animate-pulse" />
                 Health Dashboard
               </h1>
-              <p className="text-lg text-white/90">
+              <p className="text-sm md:text-lg text-white/90">
                 Welcome back, <span className="font-semibold">{user_profile?.name || "User"}</span>! Here's your comprehensive health overview.
               </p>
+              <Link to="/profile?section=reports" className="inline-flex mt-4 min-h-11 items-center gap-2 bg-white text-cyan-800 px-4 py-2 rounded-lg font-bold shadow-sm"><FaFileMedical /> Upload Report</Link>
             </div>
           </div>
         </div>
@@ -122,7 +159,7 @@ function HealthDashboard() {
         {/* Health Score Card - FEATURED */}
         {health_score && (
           <div className="mb-8 animate-scaleIn">
-            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-800/80 rounded-2xl shadow-2xl dark:shadow-gray-900/50 p-8 border-2 border-gray-200 dark:border-gray-700 hover:shadow-3xl transition-all duration-300">
+            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-800/80 rounded-lg md:rounded-2xl shadow-sm md:shadow-2xl dark:shadow-gray-900/50 p-4 md:p-8 border border-gray-200 dark:border-gray-700 transition-all duration-300">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 {/* Score Circle */}
                 <div className="relative">

@@ -5,6 +5,7 @@ Configuration and environment variables
 import os
 import sys
 from pathlib import Path
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,7 +15,16 @@ ENV = os.environ.get("ENV", "development").lower()
 IS_PRODUCTION = ENV in ("production", "prod")
 
 # MongoDB Configuration
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/helloai")
+_mongo_uri = os.environ.get("MONGO_URI", "")
+if not _mongo_uri or "<db_password>" in _mongo_uri:
+    _mongo_uri = os.environ.get("MONGODB_URI", "")
+_mongo_username = os.environ.get("MONGODB_USERNAME", "")
+_mongo_password = os.environ.get("MONGODB_PASSWORD", "")
+if _mongo_uri and _mongo_username and _mongo_password and "://" in _mongo_uri and "@" in _mongo_uri:
+    scheme, remainder = _mongo_uri.split("://", 1)
+    _, hosts = remainder.split("@", 1)
+    _mongo_uri = f"{scheme}://{quote_plus(_mongo_username)}:{quote_plus(_mongo_password)}@{hosts}"
+MONGO_URI = _mongo_uri or "mongodb://localhost:27017/helloai"
 MONGO_DBNAME = os.environ.get("MONGO_DBNAME", "helloai")
 
 # Security — SECRET_KEY is MANDATORY in production

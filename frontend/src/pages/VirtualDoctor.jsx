@@ -18,7 +18,7 @@ import {
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 import { toast } from "react-toastify";
-import { API_BASE_URL } from "../utils/api";
+import { API_BASE_URL, authenticatedFetch } from "../utils/api";
 
 const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60);
@@ -27,12 +27,11 @@ const formatTime = (seconds) => {
 };
 
 const getToken = async () => {
-  const response = await fetch(`${API_BASE_URL}/livekit/token`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/livekit/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
   });
   const data = await response.json();
   if (!data.success) throw new Error(data.detail || "Failed to get token");

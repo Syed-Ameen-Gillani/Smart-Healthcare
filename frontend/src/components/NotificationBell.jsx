@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../context/NotificationContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoNotifications } from "react-icons/io5";
-import { API_BASE_URL } from "../utils/api";
+import { API_BASE_URL, authenticatedFetch } from "../utils/api";
 
 const TYPE_ICONS = {
   info: "ℹ️",
@@ -33,9 +33,7 @@ export default function NotificationBell() {
   const loadNotifications = async () => {
     if (loaded) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/notifications?limit=30`, {
-        credentials: "include",
-      });
+      const res = await authenticatedFetch(`${API_BASE_URL}/notifications?limit=30`);
       if (res.ok) {
         const data = await res.json();
         if (data.success) {
@@ -89,7 +87,7 @@ export default function NotificationBell() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-12 w-80 max-h-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50"
+            className="fixed left-3 right-3 top-[calc(var(--app-top-bar-height)+var(--safe-top)+8px)] max-h-[calc(100dvh-var(--app-top-bar-height)-var(--app-bottom-nav-height)-32px)] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50 lg:absolute lg:left-auto lg:right-0 lg:top-12 lg:w-80 lg:max-h-96 lg:rounded-2xl"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-btn2/5 to-sky-500/5">
               <h3 className="font-bold text-gray-800 text-sm">Notifications</h3>
@@ -103,7 +101,7 @@ export default function NotificationBell() {
               )}
             </div>
 
-            <div className="overflow-y-auto max-h-72">
+            <div className="overflow-y-auto max-h-[calc(100dvh-var(--app-top-bar-height)-var(--app-bottom-nav-height)-90px)] lg:max-h-72">
               {notifications.length === 0 ? (
                 <div className="py-10 text-center text-gray-400">
                   <div className="text-3xl mb-2">🔔</div>

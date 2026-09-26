@@ -1,10 +1,11 @@
 import React, { Suspense, lazy } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import NavBar from "./components/NavBar";
+import AppShell from "./components/app-shell/AppShell";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "./context/AuthContext";
 import { useTheme } from "./context/ThemeContext";
+import { IS_NATIVE } from "./utils/runtime";
 
 // ✅ LAZY LOAD PAGES FOR BETTER PERFORMANCE
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -29,6 +30,10 @@ const Gamification = lazy(() => import("./pages/Gamification"));
 const ExportData = lazy(() => import("./pages/ExportData"));
 const TwoFactorSettings = lazy(() => import("./pages/TwoFactorSettings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const MedicineStore = lazy(() => import("./pages/MedicineStore"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const UserAgreement = lazy(() => import("./pages/UserAgreement"));
+const More = lazy(() => import("./pages/More"));
 
 // Error Boundary for lazy-loaded routes
 class ErrorBoundary extends React.Component {
@@ -89,7 +94,7 @@ function PageLoader() {
 // ✅ PROTECTED ROUTE COMPONENT
 function ProtectedRoute({ children }) {
   const { loggedIn } = useAuth();
-  return loggedIn ? children : <Navigate to="/login" replace />;
+  return loggedIn || IS_NATIVE ? children : <Navigate to="/login" replace />;
 }
 
 // ✅ PUBLIC ROUTE COMPONENT (Redirects if logged in)
@@ -110,13 +115,11 @@ function PageTransition({ children }) {
 }
 
 function App() {
-  const { loggedIn } = useAuth();
   const { isDark } = useTheme();
 
   return (
     <>
-      <NavBar />
-      
+      <AppShell>
       <ErrorBoundary>
         <Suspense fallback={<PageLoader />}>
         <Chatbot />
@@ -124,7 +127,9 @@ function App() {
         <PageTransition>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={IS_NATIVE ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<UserAgreement />} />
             
             <Route
               path="/login"
@@ -299,6 +304,20 @@ function App() {
             />
 
             <Route
+              path="/medicine-store"
+              element={
+                <ProtectedRoute>
+                  <MedicineStore />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/more"
+              element={<ProtectedRoute><More /></ProtectedRoute>}
+            />
+
+            <Route
               path="/admin"
               element={
                 <ProtectedRoute>
@@ -313,6 +332,7 @@ function App() {
         </PageTransition>
       </Suspense>
       </ErrorBoundary>
+      </AppShell>
 
       {/* ✅ ENHANCED TOAST CONTAINER */}
       <ToastContainer 

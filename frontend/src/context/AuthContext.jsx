@@ -1,6 +1,7 @@
 // context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { authAPI } from "../utils/api";  
+import { authAPI } from "../utils/api";
+import { clearAccessToken, restoreAccessToken } from "../utils/runtime";
 
 
 const AuthContext = createContext();
@@ -15,11 +16,28 @@ export default function AuthProvider({ children }) {
     checkAuthStatus();
   }, []);
 
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      console.info("[session] Auth state cleared after an unauthorized response");
+      setEmail("");
+      setUser(null);
+      setLoggedIn(false);
+    };
+
+    window.addEventListener("smarthealth:session-expired", handleSessionExpired);
+    return () => window.removeEventListener("smarthealth:session-expired", handleSessionExpired);
+  }, []);
+
   const checkAuthStatus = async () => {
     try {
+      const restored = await restoreAccessToken();
+      if (restored) {
+        console.info("[session] Validating restored native session");
+      }
       const response = await authAPI.checkAuth();
       
       if (response.success) {
+        console.info("[session] Session validation succeeded");
         setLoggedIn(true);
         setUser(response.data?.user);
         setEmail(response.data?.user?.email || "");
@@ -27,7 +45,7 @@ export default function AuthProvider({ children }) {
         clearAuth();
       }
     } catch (error) {
-      console.error("Auth check failed:", error);
+      console.info("[session] No valid session available");
       clearAuth();
     } finally {
       setLoading(false);
@@ -39,6 +57,7 @@ export default function AuthProvider({ children }) {
     setEmail(userEmail);
     setUser(userData);
     setLoggedIn(true);
+    console.info("[session] User interface marked as signed in");
   };
 
   const logout = async () => {
@@ -48,10 +67,12 @@ export default function AuthProvider({ children }) {
       console.error("Logout error:", error);
     } finally {
       clearAuth();
+      console.info("[session] User signed out");
     }
   };
 
   const clearAuth = () => {
+    clearAccessToken();
     setEmail("");
     setUser(null);
     setLoggedIn(false);

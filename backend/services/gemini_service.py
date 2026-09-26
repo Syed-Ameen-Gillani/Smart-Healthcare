@@ -18,9 +18,9 @@ gemini_client = None
 # 📋 MODEL CONFIGURATION
 # ============================================
 GEMINI_MODELS = [
-    "gemini-2.5-flash",  # Stable 2.5 alias — best quality/speed tradeoff
-    "gemini-2.0-flash",  # Proven stable fallback
-    "gemini-2.0-flash-lite",  # Lightweight fallback
+    "gemini-3.5-flash-lite",  # Stable, low-cost multimodal document parsing
+    "gemini-3.5-flash",  # Stable quality fallback
+    "gemini-3.6-flash",  # Stable multimodal fallback
 ]
 
 # ============================================
@@ -408,6 +408,43 @@ async def gemini_personalized_health_plan(
 # ============================================
 
 
+VALID_RISK_LEVELS = {
+    "low": "Low", "moderate": "Moderate", "medium": "Moderate",
+    "high": "High", "critical": "Critical", "unable to assess": "Unable to assess",
+}
+
+
+def normalize_report_analysis(analysis: Any) -> Dict[str, Any]:
+    """Return one safe report-analysis shape for every Gemini response."""
+    if not isinstance(analysis, dict):
+        analysis = {"summary": str(analysis or "")}
+
+    def clean_list(value):
+        if not isinstance(value, list):
+            return []
+        return [str(item).strip() for item in value if str(item).strip()]
+
+    metrics = analysis.get("health_metrics")
+    metrics = metrics if isinstance(metrics, dict) else {}
+    metrics = {str(k).strip(): str(v).strip() for k, v in metrics.items() if str(k).strip() and str(v).strip()}
+    risk_key = str(analysis.get("risk_level", "Unable to assess")).strip().lower()
+    normalized = {
+        "report_type": str(analysis.get("report_type") or "General medical report").strip(),
+        "patient_info": str(analysis.get("patient_info") or "Not specified").strip(),
+        "report_date": str(analysis.get("report_date") or "Not specified").strip(),
+        "summary": str(analysis.get("summary") or "No reliable summary was produced.").strip(),
+        "health_metrics": metrics,
+        "key_findings": clean_list(analysis.get("key_findings")),
+        "abnormal_values": clean_list(analysis.get("abnormal_values")),
+        "risk_level": VALID_RISK_LEVELS.get(risk_key, "Unable to assess"),
+        "recommendations": clean_list(analysis.get("recommendations")),
+        "limitations": str(analysis.get("limitations") or "None reported.").strip(),
+    }
+    from services.specialty_service import recommend_specialty
+    normalized["specialty_recommendation"] = recommend_specialty(normalized)
+    return normalized
+
+
 async def _analyze_media_content(content_parts: list, prompt: str) -> Dict[str, Any]:
     response_text = ""
     last_error = None
@@ -435,11 +472,15 @@ async def _analyze_media_content(content_parts: list, prompt: str) -> Dict[str, 
     clean_text = response_text.replace("```json", "").replace("```", "").strip()
 
     try:
-        return {"success": True, "analysis": json.loads(clean_text)}
+        return {"success": True, "analysis": normalize_report_analysis(json.loads(clean_text))}
     except json.JSONDecodeError:
         return {
             "success": True,
-            "analysis": {"summary": clean_text, "health_metrics": {}},
+            "analysis": normalize_report_analysis({
+                "summary": clean_text,
+                "limitations": "Gemini did not return the requested JSON structure.",
+                "risk_level": "Unable to assess",
+            }),
         }
 
 

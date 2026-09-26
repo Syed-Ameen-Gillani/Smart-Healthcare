@@ -4,7 +4,12 @@
  * UPDATED: All endpoints match backend routes with proper error handling + JWT Auth
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import {
+  API_BASE_URL,
+  authenticatedFetch,
+  clearAccessToken,
+  persistAccessToken,
+} from "./runtime";
 
 /**
  * Make authenticated API request with enhanced error handling
@@ -23,9 +28,8 @@ async function apiRequest(endpoint, options = {}) {
     
     Object.assign(headers, options.headers);
     
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await authenticatedFetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
-      credentials: "include",
       headers,
     });
 
@@ -41,7 +45,11 @@ async function apiRequest(endpoint, options = {}) {
     }
     
     if (!response.ok) {
-      throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      throw new Error(data.detail || data.message || `HTTP error! status: ${response.status}`);
+    }
+
+    if (data?.data?.access_token) {
+      await persistAccessToken(data.data.access_token);
     }
 
     return data;
@@ -100,9 +108,11 @@ export const authAPI = {
   },
 
   logout: async () => {
-    return apiRequest("/auth/logout", {
-      method: "POST",
-    });
+    try {
+      return await apiRequest("/auth/logout", { method: "POST" });
+    } finally {
+      clearAccessToken();
+    }
   },
 
   // Check authentication status
@@ -185,10 +195,14 @@ export const predictionAPI = {
  */
 export const geminiAPI = {
   healthChat: async (message, context = {}) => {
-    return apiRequest("/gemini/chat", {
+    const response = await apiRequest("/gemini/chat", {
       method: "POST",
       body: JSON.stringify({ message, context }),
     });
+    console.info("[gemini] Chat response received", {
+      responseLength: response.data?.response?.length || 0,
+    });
+    return response;
   },
 
   explainMedicalTerm: async (term) => {
@@ -303,9 +317,7 @@ export const fileAPI = {
   },
 
   viewFile: async (fileId) => {
-    const response = await fetch(`${API_BASE_URL}/files/${fileId}`, {
-      credentials: 'include'
-    });
+    const response = await authenticatedFetch(`${API_BASE_URL}/files/${fileId}`);
     
     if (!response.ok) {
       throw new Error('Failed to load file');
@@ -411,6 +423,33 @@ export const medicationAPI = {
   },
 };
 
+export const medicineOrderAPI = {
+  catalog: async (search = "") => {
+    const query = search ? `?search=${encodeURIComponent(search)}` : "";
+    const response = await apiRequest(`/medicine-catalog${query}`, { method: "GET" });
+    console.info("[medicine] Catalog loaded", {
+      count: response.data?.medicines?.length || 0,
+      filtered: Boolean(search),
+    });
+    return response;
+  },
+  seedCatalog: async () => apiRequest("/medicine-catalog/seed", { method: "POST" }),
+  create: async (order) => {
+    const response = await apiRequest("/medicine-orders", {
+      method: "POST",
+      body: JSON.stringify(order),
+    });
+    console.info("[medicine] Demo order submitted", { itemCount: order.items?.length || 0 });
+    return response;
+  },
+  list: async () => {
+    const response = await apiRequest("/medicine-orders", { method: "GET" });
+    console.info("[medicine] Order history loaded", { count: response.data?.orders?.length || 0 });
+    return response;
+  },
+  get: async (orderId) => apiRequest(`/medicine-orders/${orderId}`, { method: "GET" }),
+};
+
 /**
  * Health Dashboard APIs
  */
@@ -476,9 +515,7 @@ export const timelineAPI = {
  */
 export const reportAPI = {
   downloadReport: async (days = 90) => {
-    const response = await fetch(`${API_BASE_URL}/reports/generate?days=${days}`, {
-      credentials: "include",
-    });
+    const response = await authenticatedFetch(`${API_BASE_URL}/reports/generate?days=${days}`);
     if (!response.ok) throw new Error("Failed to generate report");
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
@@ -679,9 +716,7 @@ export const checkAuthentication = async () => {
  */
 export const downloadFile = async (fileId, filename) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/files/${fileId}`, {
-      credentials: "include",
-    });
+    const response = await authenticatedFetch(`${API_BASE_URL}/files/${fileId}`);
     
     if (!response.ok) throw new Error("Download failed");
     
@@ -701,7 +736,7 @@ export const downloadFile = async (fileId, filename) => {
 };
 
 // Export the base apiRequest function for custom calls
-export { apiRequest, API_BASE_URL };
+export { apiRequest, API_BASE_URL, authenticatedFetch };
 
 // DEFAULT EXPORT: All APIs in one object
 export default {
@@ -716,6 +751,7 @@ export default {
   article: articleAPI,
   livekit: livekitAPI,
   medication: medicationAPI,
+  medicineOrders: medicineOrderAPI,
   timeline: timelineAPI,
   report: reportAPI,
   family: familyAPI,

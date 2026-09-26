@@ -25,6 +25,7 @@ async def check_auth_status(current_user: dict = Depends(get_current_user)):
     """
     Verifies the JWT token and restores session on page refresh.
     """
+    logger.info("Session validation succeeded")
     return standard_response(
         message="User is authenticated", data={"user": current_user, "success": True}
     )
@@ -60,7 +61,7 @@ async def signup(user: SignupRequest, background_tasks: BackgroundTasks):
     background_tasks.add_task(
         send_welcome_email, user.email, f"{user.first_name} {user.last_name}"
     )
-    logger.info(f"📧 Welcome email queued for {user.email}")
+    logger.info("User registered and welcome email queued")
 
     # Prepare response data
     response_data = standard_response(
@@ -93,10 +94,12 @@ async def login(credentials: LoginRequest):
     result = await authenticate_user(credentials.email, credentials.password)
 
     if not result["success"]:
+        logger.warning("Login rejected")
         raise HTTPException(status_code=401, detail=result["message"])
 
     user_doc = await db.store.find_one({"email": credentials.email})
     if user_doc and user_doc.get("totp_verified"):
+        logger.info("Login requires two-factor verification")
         return JSONResponse(
             content=jsonable_encoder(
                 standard_response(
@@ -130,6 +133,7 @@ async def login(credentials: LoginRequest):
         samesite="lax",
     )
 
+    logger.info("Login session issued")
     return response
 
 
@@ -142,4 +146,5 @@ async def logout(request: Request):
         content=standard_response(message="Logged out successfully")
     )
     response.delete_cookie("session_token")
+    logger.info("Logout completed")
     return response

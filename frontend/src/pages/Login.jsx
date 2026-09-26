@@ -129,8 +129,8 @@ function Login() {
 
   if (requires2FA) {
     return (
-      <div className="relative flex flex-col justify-center items-center w-full min-h-[500px] bg-lightBackground dark:bg-gray-900 font-text mt-20 md:mt-0">
-        <div className="rounded-2xl shadow-xl shadow-gray-300 dark:shadow-gray-800 mx-10 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 overflow-hidden max-w-md w-full">
+      <div className="native-auth-screen relative flex flex-col justify-center items-center w-full min-h-[100dvh] bg-lightBackground dark:bg-gray-900 font-text px-4 py-6 md:py-8">
+        <div className="rounded-lg md:rounded-2xl shadow-xl shadow-gray-300 dark:shadow-gray-800 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 overflow-hidden max-w-md w-full">
           <div className="bg-gradient-to-r from-btn2 to-sky-500 p-8 text-center">
             <FaShieldHalved className="text-4xl text-white mx-auto mb-2" />
             <h1 className="font-extrabold text-2xl text-white">Two-Factor Authentication</h1>
@@ -214,10 +214,10 @@ function Login() {
   }
 
   return (
-    <div className="relative flex flex-col justify-center items-center w-full md:h-[500px] bg-lightBackground dark:bg-gray-950 font-text h-[700px] mt-20 md:mt-0">
-      <div className="rounded-2xl shadow-xl shadow-gray-300 dark:shadow-gray-900/50 mx-10 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl transition-all duration-300">
-        <div className="bg-gradient-to-r from-btn2 to-btn1 p-8">
-          <h1 className="font-extrabold capitalize text-4xl justify-center items-center flex text-white mb-2">
+    <div className="native-auth-screen relative flex flex-col justify-center items-center w-full min-h-[100dvh] bg-lightBackground dark:bg-gray-950 font-text px-4 py-6 md:py-8">
+      <div className="rounded-lg md:rounded-2xl shadow-xl shadow-gray-300 dark:shadow-gray-900/50 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 overflow-hidden max-w-md w-full">
+        <div className="bg-gradient-to-r from-btn2 to-btn1 p-5 md:p-8">
+          <h1 className="font-extrabold capitalize text-3xl md:text-4xl justify-center items-center flex text-white mb-2">
             Welcome Back
           </h1>
           <p className="text-sm text-white/90 font-medium text-center px-4">
@@ -225,7 +225,7 @@ function Login() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8">
+        <form onSubmit={handleSubmit} className="p-5 md:p-8">
           <div className="flex flex-col justify-center space-y-5">
             {/* Email Input */}
             <div className="flex flex-col group">

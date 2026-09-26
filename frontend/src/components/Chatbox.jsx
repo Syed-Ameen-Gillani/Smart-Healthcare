@@ -108,7 +108,7 @@ const Chatbot = () => {
       {geminiAvailable && !isGeminiOpen && (
         <button
           onClick={() => setIsGeminiOpen(true)}
-          className="fixed bottom-6 right-6 bg-gradient-to-r from-btn2 to-sky-500 text-white p-4 rounded-full shadow-lg hover:shadow-2xl transition-all z-[9999] flex items-center justify-center group hover:scale-110 animate-pulse"
+          className="fixed bottom-[calc(var(--app-bottom-nav-height)+var(--safe-bottom)+12px)] lg:bottom-6 right-4 lg:right-6 bg-gradient-to-r from-btn2 to-sky-500 text-white p-4 rounded-full shadow-lg hover:shadow-2xl transition-all z-[39] lg:z-[9999] flex items-center justify-center group hover:scale-110 animate-pulse"
           aria-label="Open Gemini AI chat"
           title="Gemini AI Assistant"
         >
@@ -119,7 +119,7 @@ const Chatbot = () => {
 
       {/* Gemini Chat Window - Now bottom-right */}
       {geminiAvailable && isGeminiOpen && (
-        <div className="fixed bottom-0 right-0 md:bottom-6 md:right-6 w-full md:w-96 h-screen md:h-[600px] bg-white dark:bg-gray-800 md:rounded-lg shadow-2xl dark:shadow-gray-900/50 flex flex-col z-[9999] border border-gray-200 dark:border-gray-700 animate-slideUp">
+        <div className="fixed inset-0 lg:inset-auto lg:bottom-6 lg:right-6 w-full lg:w-96 h-[100dvh] lg:h-[600px] bg-white dark:bg-gray-800 lg:rounded-lg shadow-2xl dark:shadow-gray-900/50 flex flex-col z-[60] lg:z-[9999] border border-gray-200 dark:border-gray-700 animate-slideUp">
           {/* Header */}
           <div className="bg-gradient-to-r from-btn2 to-sky-500 text-white p-4 md:rounded-t-lg flex justify-between items-center shadow-lg">
             <div className="flex items-center gap-2">

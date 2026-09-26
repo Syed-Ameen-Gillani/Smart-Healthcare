@@ -33,6 +33,12 @@ async def health_chatbot(chat: ChatRequest, request: Request):
     try:
         context = chat.context or {}
         email = await get_current_user(request)
+        logger.info(
+            "Gemini chat requested: authenticated=%s context_keys=%d message_length=%d",
+            bool(email),
+            len(context),
+            len(chat.message),
+        )
 
         # Add user context
         if email:
@@ -61,8 +67,14 @@ async def health_chatbot(chat: ChatRequest, request: Request):
                         "created_at": datetime.utcnow(),
                     }
                 )
-            except:
-                pass
+            except Exception:
+                logger.warning("Gemini chat history was not saved", exc_info=True)
+
+        logger.info(
+            "Gemini chat response generated: authenticated=%s response_length=%d",
+            bool(email),
+            len(response_text),
+        )
 
         return standard_response(
             message="Chat response generated",
@@ -72,8 +84,8 @@ async def health_chatbot(chat: ChatRequest, request: Request):
             },
         )
 
-    except Exception as e:
-        logger.error(f"Chat error: {e}")
+    except Exception:
+        logger.exception("Gemini chat failed")
         raise HTTPException(status_code=500, detail="Chat failed")
 
 
@@ -86,6 +98,12 @@ async def health_chatbot_stream(chat: ChatRequest, request: Request):
     try:
         context = chat.context or {}
         email = await get_current_user(request)
+        logger.info(
+            "Gemini streaming chat requested: authenticated=%s context_keys=%d message_length=%d",
+            bool(email),
+            len(context),
+            len(chat.message),
+        )
 
         if email:
             user_data = await db.store.find_one({"email": email})
@@ -98,8 +116,8 @@ async def health_chatbot_stream(chat: ChatRequest, request: Request):
 
         return StreamingResponse(generate(), media_type="text/plain")
 
-    except Exception as e:
-        logger.error(f"Stream error: {e}")
+    except Exception:
+        logger.exception("Gemini streaming chat failed")
         raise HTTPException(status_code=500, detail="Streaming failed")
 
 
@@ -228,12 +246,13 @@ async def generate_health_plan(request: Request):
 @router.get("/status")
 async def gemini_status():
     """Gemini status"""
+    logger.info("Gemini status requested: available=%s", is_gemini_available())
     return standard_response(
         message="Gemini AI status",
         data={
             "enabled": is_gemini_available(),
             "sdk_version": "2026 (google-genai)",
-            "model": "gemini-2.0-flash",
+            "model": "gemini-3.5-flash-lite",
             "features": {
                 "chat": is_gemini_available(),
                 "streaming": is_gemini_available(),

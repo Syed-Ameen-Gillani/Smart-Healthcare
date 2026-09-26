@@ -49,6 +49,7 @@ from routes.gamification import router as gamification_router
 from routes.export import router as export_router
 from routes.two_factor import router as two_factor_router
 from routes.admin import router as admin_router
+from routes.medicine_orders import router as medicine_orders_router
 
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
@@ -141,6 +142,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "capacitor://localhost",
+        "https://localhost",
         *allow_origin,
     ],
     allow_credentials=True,
@@ -179,6 +182,7 @@ app.include_router(gamification_router)
 app.include_router(export_router)
 app.include_router(two_factor_router)
 app.include_router(admin_router)
+app.include_router(medicine_orders_router)
 
 
 @app.get("/", tags=["General"])

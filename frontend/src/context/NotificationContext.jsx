@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "./AuthContext";
+import {
+  API_BASE_URL,
+  authenticatedFetch,
+  getNotificationsWebSocketUrl,
+} from "../utils/runtime";
 
 const NotificationContext = createContext();
-
-const WS_BASE = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/^http/, "ws");
 
 export default function NotificationProvider({ children }) {
   const { loggedIn } = useAuth();
@@ -19,7 +22,7 @@ export default function NotificationProvider({ children }) {
     if (!loggedIn || wsRef.current?.readyState === WebSocket.OPEN) return;
 
     try {
-      const ws = new WebSocket(`${WS_BASE}/ws/notifications`);
+      const ws = new WebSocket(getNotificationsWebSocketUrl());
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -93,10 +96,8 @@ export default function NotificationProvider({ children }) {
 
   const markAllRead = useCallback(async () => {
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
-      await fetch(`${API_BASE}/notifications/read-all`, {
+      await authenticatedFetch(`${API_BASE_URL}/notifications/read-all`, {
         method: "PATCH",
-        credentials: "include",
       });
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setUnreadCount(0);
