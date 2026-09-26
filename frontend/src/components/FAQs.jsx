@@ -1,0 +1,78 @@
+import React from "react";
+
+function FAQ() {
+  return (
+    <div className="md:h-full h-screen w-full font-text my-10">
+      <div className="">
+        <div className=" p-8">
+          <h2 className="mb-16 h text-4xl font-extrabold leading-9 border-b-2 text-lightText dark:text-btn2 border-lightText dark:border-gray-700">
+            FAQs
+          </h2>
+          <div className="flex h-full justify-between flex-col md:flex-row">
+            <div className="flex  w-full px-4">
+              <ul className="flex flex-col  items-start gap-8 font-nunito text-sm">
+                <li className="">
+                   <p className="md:text-lg font-medium leading-6 text-gray-600 dark:text-gray-200 ">
+                    What is the AI HealthEngine, and how does it work?
+                  </p>
+                  <div className="mt-2">
+                    <p className="md:text-base leading-6 text-gray-500 dark:text-gray-400">
+                      The AI HealthEngine uses advanced AI to personalize
+                      healthcare. text-base text-base text-base text-baseIt
+                      analyzes data for tailored insights, providing proactive
+                      wellness tips and condition-specific guidance.
+                    </p>
+                  </div>
+                </li>
+
+                <li className="">
+                   <p className="md:text-lg font-medium leading-6 text-gray-600 dark:text-gray-200">
+                    Is my data secure and private?
+                  </p>
+                  <div className="mt-2">
+                    <p className="md:text-base leading-6 text-gray-500 dark:text-gray-400">
+                      Yes, we prioritize data security and privacy specifically
+                      within the AI HealthEngine module, implementing stringent
+                      measures to protect your information.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div className="flex w-full px-4">
+              <ul className="flex flex-col  items-start gap-8 font-nunito text-sm ">
+                <li className="">
+                   <p className="md:text-lg font-medium leading-6 text-gray-600 dark:text-gray-200">
+                    How can I get started with the AI HealthEngine?
+                  </p>
+                  <div className="mt-2">
+                    <p className="md:text-base leading-6 text-gray-500 dark:text-gray-400">
+                      Simply sign up, create an account, and follow the
+                      straightforward onboarding process to start benefiting
+                      from the AI HealthEngine.
+                    </p>
+                  </div>
+                </li>
+                <li className="">
+                   <p className="md:text-lg font-medium leading-6 text-gray-600 dark:text-gray-200">
+                    Is customer support available?
+                  </p>
+                  <div className="mt-2">
+                    <p className="md:text-base leading-6 text-gray-500 dark:text-gray-400">
+                      Absolutely, our dedicated customer support team is
+                      available to assist you. Contact us through our provided
+                      channels, and we'll address your questions or concerns
+                      promptly.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default FAQ;

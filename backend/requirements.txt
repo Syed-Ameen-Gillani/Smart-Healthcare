@@ -1,0 +1,50 @@
+# FastAPI and Server
+fastapi
+uvicorn[standard]
+python-multipart
+
+# New Gemini SDK (2026)
+google-genai
+
+# Database
+motor
+pymongo
+
+# Authentication & Security
+bcrypt
+python-jose[cryptography]
+pyotp
+qrcode[pil]
+
+# Email
+aiosmtplib
+mailtrap
+
+# ML Models
+numpy
+scikit-learn
+pandas
+
+# Image Processing
+Pillow
+PyPDF2
+
+# Validation
+pydantic
+pydantic-settings
+email-validator
+
+# Environment
+python-dotenv
+
+# LiveKit (token generation only)
+livekit-api
+
+# Rate Limiting
+slowapi
+
+# PDF Generation
+reportlab
+
+# Utilities
+aiofiles
