@@ -26,29 +26,16 @@ from config.settings import (
 )
 from database.connection import db, create_indexes, close_connection
 from services.gemini_service import initialize_gemini
-from services.ml_service import load_models, are_models_loaded
 
 # Import ALL routers
 from routes.gemini import router as gemini_router
 from routes.auth import router as auth_router
-from routes.prediction import router as prediction_router
 from routes.profile import router as profile_router
-from routes.appointments import router as appointments_router
-from routes.predictions_history import router as history_router
 from routes.files import router as files_router
 from routes.contact import router as contact_router
-from routes.dashboard import router as dashboard_router
-from routes.livekit_token import router as livekit_router
-from routes.medications import router as medications_router
-from routes.timeline import router as timeline_router
 from routes.reports import router as reports_router
-from routes.family import router as family_router
-from routes.notifications import router as notifications_router
 from routes.doctors import router as doctors_router
-from routes.gamification import router as gamification_router
 from routes.export import router as export_router
-from routes.two_factor import router as two_factor_router
-from routes.admin import router as admin_router
 from routes.medicine_orders import router as medicine_orders_router
 
 
@@ -107,9 +94,6 @@ async def lifespan(app: FastAPI):
     else:
         logger.warning("[WARN] Gemini disabled")
 
-    # Load ML models
-    await load_models()
-
     # Create database indexes
     await create_indexes()
 
@@ -164,24 +148,12 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Include ALL routers
 app.include_router(auth_router)  # Authentication
 app.include_router(gemini_router)  # Gemini AI
-app.include_router(prediction_router)  # Disease predictions
 app.include_router(profile_router)  # User profile
-app.include_router(appointments_router)  #  Appointments
-app.include_router(history_router)  # Prediction history
 app.include_router(files_router)  #  File uploads
 app.include_router(contact_router)  #  Contact form
-app.include_router(dashboard_router)  #  Health dashboard
-app.include_router(livekit_router)
-app.include_router(medications_router)
-app.include_router(timeline_router)
 app.include_router(reports_router)
-app.include_router(family_router)
-app.include_router(notifications_router)
 app.include_router(doctors_router)
-app.include_router(gamification_router)
 app.include_router(export_router)
-app.include_router(two_factor_router)
-app.include_router(admin_router)
 app.include_router(medicine_orders_router)
 
 
@@ -201,26 +173,15 @@ async def home():
                 "health": "/health",
                 "auth": "/auth/*",
                 "gemini": "/gemini/*",
-                "predictions": "/predict/*",
                 "profile": "/profile",
-                "appointments": "/appointments",
-                "history": "/predictions/history",
                 "files": "/files",
                 "contact": "/contact",
                 "dashboard": "/health/dashboard",
-                "livekit": "/livekit/*",
-                "medications": "/medications/*",
-                "timeline": "/timeline",
-                "journal": "/timeline/journal",
                 "reports": "/reports/*",
-                "family": "/family/*",
-                "notifications": "/notifications/*",
-                "ws_notifications": "/ws/notifications",
                 "doctors": "/doctors/*",
-                "gamification": "/gamification",
                 "export": "/export/*",
-                "two_factor": "/auth/2fa/*",
-                "admin": "/admin/*",
+                "medicine_catalog": "/medicine-catalog",
+                "medicine_orders": "/medicine-orders",
             },
         },
     }
@@ -238,7 +199,6 @@ async def health_check():
             "message": "Service is healthy",
             "data": {
                 "database": "connected",
-                "ml_models": "loaded" if are_models_loaded() else "not loaded",
                 "gemini": "enabled" if is_gemini_available() else "disabled",
                 "timestamp": datetime.utcnow().isoformat(),
                 "routes_loaded": len(app.routes),

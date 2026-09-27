@@ -108,7 +108,7 @@ const Chatbot = () => {
       {geminiAvailable && !isGeminiOpen && (
         <button
           onClick={() => setIsGeminiOpen(true)}
-          className="fixed bottom-[calc(var(--app-bottom-nav-height)+var(--safe-bottom)+12px)] lg:bottom-6 right-4 lg:right-6 bg-gradient-to-r from-btn2 to-sky-500 text-white p-4 rounded-full shadow-lg hover:shadow-2xl transition-all z-[39] lg:z-[9999] flex items-center justify-center group hover:scale-110 animate-pulse"
+          className="fixed bottom-[calc(var(--app-bottom-nav-height)+var(--safe-bottom)+12px)] lg:bottom-6 right-4 lg:right-6 bg-gradient-to-r from-btn2 to-btn1 text-white p-4 rounded-full shadow-lg hover:shadow-2xl transition-all z-[39] lg:z-[9999] flex items-center justify-center group hover:scale-110 animate-pulse"
           aria-label="Open Gemini AI chat"
           title="Gemini AI Assistant"
         >
@@ -119,9 +119,9 @@ const Chatbot = () => {
 
       {/* Gemini Chat Window - Now bottom-right */}
       {geminiAvailable && isGeminiOpen && (
-        <div className="fixed inset-0 lg:inset-auto lg:bottom-6 lg:right-6 w-full lg:w-96 h-[100dvh] lg:h-[600px] bg-white dark:bg-gray-800 lg:rounded-lg shadow-2xl dark:shadow-gray-900/50 flex flex-col z-[60] lg:z-[9999] border border-gray-200 dark:border-gray-700 animate-slideUp">
+        <div className="app-fullscreen-overlay lg:inset-auto lg:bottom-6 lg:right-6 w-full lg:w-96 lg:h-[600px] bg-white dark:bg-gray-800 lg:rounded-lg shadow-2xl dark:shadow-gray-900/50 flex flex-col z-[60] lg:z-[9999] border border-gray-200 dark:border-gray-700 animate-slideUp">
           {/* Header */}
-          <div className="bg-gradient-to-r from-btn2 to-sky-500 text-white p-4 md:rounded-t-lg flex justify-between items-center shadow-lg">
+          <div className="shrink-0 bg-gradient-to-r from-btn2 to-btn1 text-white p-4 md:rounded-t-lg flex justify-between items-center shadow-lg">
             <div className="flex items-center gap-2">
               <div className="bg-white/20 backdrop-blur-md p-2 rounded-lg">
                 <FaRobot className="text-xl" />
@@ -201,7 +201,7 @@ const Chatbot = () => {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 md:rounded-b-lg shadow-lg">
+          <div className="shrink-0 p-3 pb-[calc(12px+var(--safe-bottom))] lg:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 md:rounded-b-lg shadow-lg">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -215,7 +215,7 @@ const Chatbot = () => {
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputMessage.trim()}
-                className="bg-gradient-to-r from-btn2 to-sky-500 text-white px-5 py-3 rounded-xl hover:from-sky-500 hover:to-btn2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl hover:scale-105 disabled:scale-100"
+                className="bg-gradient-to-r from-btn2 to-btn1 text-white px-5 py-3 rounded-xl hover:from-btn1 hover:to-btn2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl hover:scale-105 disabled:scale-100"
               >
                 <FaPaperPlane />
               </button>

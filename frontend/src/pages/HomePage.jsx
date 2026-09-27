@@ -3,7 +3,6 @@ import HeroSection from "../components/HeroSection";
 import About from "../components/About";
 import Service from "../components/Services";
 import PageDivider from "../components/PD";
-import Blogs from "../components/Articles";
 import Testimonials from "../components/Testimonials";
 import Contact from "../components/Contact";
 import FAQ from "../components/FAQs";
@@ -105,19 +104,6 @@ function HomePage() {
 
         {/* Blog, Testimonials, FAQ Section */}
         <div className="md:mx-10 mx-5 space-y-12 py-8">
-          {/* Blogs Section */}
-          <div
-            id="blogs"
-            data-animate
-            className={`transform transition-all duration-700 ${
-              isVisible.blogs
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-10"
-            } hover:scale-[1.01] hover:shadow-2xl rounded-2xl`}
-          >
-            <Blogs />
-          </div>
-
           {/* Testimonials Section */}
           <div
             id="testimonials"

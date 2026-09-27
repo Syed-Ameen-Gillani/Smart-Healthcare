@@ -67,11 +67,6 @@ else:
 # Gemini API (2026 SDK)
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
-# LiveKit Configuration
-LIVEKIT_URL = os.environ.get("LIVEKIT_URL", "")
-LIVEKIT_API_KEY = os.environ.get("LIVEKIT_API_KEY", "")
-LIVEKIT_API_SECRET = os.environ.get("LIVEKIT_API_SECRET", "")
-
 # File Upload Configuration
 UPLOAD_FOLDER = Path("uploads")
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg", "gif", "doc", "docx", "txt"}

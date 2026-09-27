@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
+import { StatusBar, Style } from "@capacitor/status-bar";
 
 const ThemeContext = createContext();
 
@@ -21,6 +23,11 @@ export default function ThemeProvider({ children }) {
     } else {
       root.classList.remove("dark");
       localStorage.setItem("theme", "light");
+    }
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", isDark ? "#111827" : "#ffffff");
+    if (Capacitor.isNativePlatform()) {
+      StatusBar.setBackgroundColor({ color: isDark ? "#111827" : "#ffffff" }).catch(() => {});
+      StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light }).catch(() => {});
     }
   }, [isDark]);
 

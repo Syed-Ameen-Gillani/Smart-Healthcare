@@ -81,17 +81,14 @@ export default function AuthProvider({ children }) {
   // Show loading while checking authentication
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="text-center">
-          <div className="relative mb-6">
-            <div className="animate-spin rounded-full h-20 w-20 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-10 h-10 bg-blue-500 rounded-full animate-pulse"></div>
-            </div>
-          </div>
-          <p className="text-gray-600 font-semibold text-lg animate-pulse">
-            Checking authentication...
-          </p>
+      <div className="smart-health-splash" role="status" aria-label="Starting Smart Health">
+        <div className="smart-health-splash__brand">
+          <img src="/heart-beat.png" alt="" className="smart-health-splash__logo" />
+          <h1>Smart Health</h1>
+          <p>Care decisions, made clearer.</p>
+        </div>
+        <div className="smart-health-splash__progress" aria-hidden="true">
+          <span />
         </div>
       </div>
     );

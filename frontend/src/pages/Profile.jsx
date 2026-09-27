@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake, FaCalendarAlt, FaFileMedical, FaHeartbeat, FaChartLine, FaUpload, FaTrash, FaEye, FaCheckCircle, FaTimes, FaMicroscope, FaRuler, FaWeight } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake, FaCalendarAlt, FaFileMedical, FaHeartbeat, FaUpload, FaTrash, FaEye, FaCheckCircle, FaTimes, FaMicroscope, FaRuler, FaWeight } from "react-icons/fa";
 import { FaPenToSquare } from "react-icons/fa6";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { profileAPI, fileAPI } from "../utils/api";
-import HealthPlanGenerator from "../components/HealthPlanGenerator";
 import ReportAnalysisModal from "../components/ReportAnalysisModal";
 import { useSearchParams } from "react-router-dom";
 
@@ -253,24 +252,24 @@ function Profile() {
 
 
   const renderAboutSection = () => (
-    <div className="p-4 animate-slideUp">
-      <div className="w-full bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 p-8 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-gray-900/50 relative overflow-hidden">
+    <div className="p-0 md:p-4 animate-slideUp">
+      <div className="w-full bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm md:shadow-xl relative overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-200/20 to-purple-200/20 dark:from-blue-800/20 dark:to-purple-800/20 rounded-full -mr-20 -mt-20 blur-2xl"></div>
         <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-purple-200/20 to-pink-200/20 dark:from-purple-800/20 dark:to-pink-800/20 rounded-full -ml-20 -mb-20 blur-2xl"></div>
         
         <div className="relative z-10">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-wrap justify-between items-center gap-3 mb-5 md:mb-8">
             <div className="flex items-center gap-3">
               <div className="bg-gradient-to-br from-btn2 to-btn1 p-3 rounded-xl shadow-lg">
                 <FaUser className="text-white text-xl" />
               </div>
-              <h2 className="text-3xl font-extrabold text-gray-800 dark:text-gray-100">Personal Details</h2>
+              <h2 className="text-xl md:text-3xl font-extrabold text-gray-800 dark:text-gray-100">Personal Details</h2>
             </div>
             {!isEditing && (
               <button
                 onClick={handleEditClick}
-                className="flex items-center gap-2 bg-gradient-to-r from-btn2 to-btn1 text-white px-6 py-3 rounded-xl font-bold hover:from-btn1 hover:to-btn2 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
+                className="flex items-center gap-2 bg-gradient-to-r from-btn2 to-btn1 text-white px-4 py-2.5 rounded-lg font-bold"
               >
                 <FaPenToSquare /> Edit Profile
               </button>
@@ -321,7 +320,7 @@ function Profile() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-5">
             {[
               { field: "name", icon: FaUser, colorClass: "bg-gradient-to-br from-blue-100 to-blue-200", iconClass: "text-blue-600" },
               { field: "age", icon: FaBirthdayCake, colorClass: "bg-gradient-to-br from-purple-100 to-purple-200", iconClass: "text-purple-600" },
@@ -331,7 +330,7 @@ function Profile() {
               { field: "address", icon: FaMapMarkerAlt, colorClass: "bg-gradient-to-br from-red-100 to-red-200", iconClass: "text-red-600" },
               { field: "joiningDate", icon: FaCalendarAlt, colorClass: "bg-gradient-to-br from-orange-100 to-orange-200", iconClass: "text-orange-600" },
             ].map(({ field, icon: Icon, colorClass, iconClass }) => (
-              <div key={field} className="p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-btn2 hover:shadow-xl transition-all duration-300 group">
+              <div key={field} className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 group">
                 <div className="flex items-center gap-3 mb-2">
                   <div className={`${colorClass} p-2.5 rounded-lg group-hover:scale-110 transition-transform`}>
                     <Icon className={`${iconClass} text-lg`} />
@@ -353,15 +352,15 @@ function Profile() {
   );
 
   const renderReportsSection = () => (
-    <div className="p-4 animate-slideUp">
-      <div className="flex items-center gap-3 mb-8">
+    <div className="p-0 md:p-4 animate-slideUp">
+      <div className="flex items-center gap-3 mb-5 md:mb-8">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl shadow-lg">
           <FaFileMedical className="text-white text-2xl" />
         </div>
-        <h2 className="text-3xl font-extrabold text-gray-800 dark:text-gray-100">Health Reports</h2>
+        <h2 className="text-xl md:text-3xl font-extrabold text-gray-800 dark:text-gray-100">Health Reports</h2>
       </div>
       <div className="flex flex-col">
-        <div className="mb-8 p-8 bg-gradient-to-br from-blue-50 via-sky-50 to-blue-100 dark:from-blue-950/30 dark:via-sky-950/30 dark:to-blue-900/30 rounded-2xl border-2 border-dashed border-blue-300 dark:border-blue-700 hover:border-blue-500 hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+        <div className="mb-6 p-5 md:p-8 bg-blue-50 dark:bg-blue-950/30 rounded-lg border-2 border-dashed border-blue-300 dark:border-blue-700 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-200/0 to-purple-200/0 group-hover:from-blue-200/20 group-hover:to-purple-200/20 dark:group-hover:from-blue-800/20 dark:group-hover:to-purple-800/20 transition-all duration-500"></div>
           
           <label className="cursor-pointer relative z-10">
@@ -383,7 +382,7 @@ function Profile() {
               />
               <label
                 htmlFor="file-upload"
-                className="inline-block bg-gradient-to-r from-btn2 to-btn1 text-white px-8 py-4 rounded-xl font-bold hover:from-btn1 hover:to-btn2 transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer hover:scale-105 transform"
+                className="inline-block bg-gradient-to-r from-btn2 to-btn1 text-white px-6 py-3 rounded-lg font-bold cursor-pointer"
               >
                 <FaUpload className="inline mr-2" />
                 Choose Files
@@ -393,7 +392,7 @@ function Profile() {
         </div>
         
         {uploadedFiles.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-gray-900/50">
+          <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-6">
               <div className="bg-gradient-to-br from-green-500 to-green-600 p-2 rounded-lg">
                 <FaCheckCircle className="text-white text-xl" />
@@ -439,7 +438,7 @@ function Profile() {
                     <button
                       onClick={() => handleAnalyzeReport(file._id || file.file_id)}
                       disabled={analyzingFileId === (file._id || file.file_id)}
-                      className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 rounded-xl font-bold hover:from-purple-600 hover:to-purple-500 transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:scale-105 transform disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-gradient-to-r from-btn2 to-btn1 text-white px-4 py-2 rounded-xl font-bold hover:from-btn1 hover:to-btn2 transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:scale-105 transform disabled:opacity-50 disabled:cursor-not-allowed"
                       title="Analyze report with AI"
                     >
                       <FaMicroscope />
@@ -480,7 +479,7 @@ const renderHealthSection = () => {
   const bpStatus = getBloodPressureStatus(values.pressure);
 
   return (
-    <div className="p-4 animate-slideUp">
+    <div className="p-0 md:p-4 animate-slideUp">
       {/* ✅ HEADER WITH EDIT/SAVE BUTTONS */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -515,7 +514,7 @@ const renderHealthSection = () => {
         )}
       </div>
       
-      <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 space-y-6">
+      <div className="space-y-6 lg:max-h-[calc(100vh-300px)] lg:overflow-y-auto lg:pr-2">
         {/* ✅ BMI CALCULATOR CARD */}
         <div className="bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/30 p-6 rounded-2xl border-2 border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-all">
           <div className="flex items-center gap-3 mb-4">
@@ -683,24 +682,6 @@ const renderHealthSection = () => {
           )}
         </div>
 
-        {/* Health Plan Generator */}
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-2xl border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-all">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-green-500 p-2 rounded-lg">
-              <FaChartLine className="text-white text-xl" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-              Personalized Health Plan
-            </h3>
-          </div>
-          <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-            Generate a comprehensive, personalized health management plan based on your recent diagnosis. 
-            Our AI will create a detailed 4-week plan tailored to your specific health condition.
-          </p>
-          <div className="flex justify-center">
-            <HealthPlanGenerator />
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -720,95 +701,18 @@ const renderHealthSection = () => {
   };
 
   return (
-    <div className="w-full min-h-screen font-text bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-8 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-5">
+    <main className="app-page w-full font-text bg-gray-50 dark:bg-gray-950">
+      <div className="app-page__inner max-w-7xl">
         {/* Header */}
-        <div className="mb-4 md:mb-8">
+        <div className="hidden lg:block mb-8">
           <div className="bg-gradient-to-r from-btn2 to-btn1 rounded-lg md:rounded-2xl p-4 md:p-8 shadow-md md:shadow-xl text-white">
             <h1 className="text-2xl md:text-5xl font-extrabold mb-1 md:mb-3">{activeSection === "reports" ? "Medical Reports" : "My Profile"}</h1>
             <p className="text-sm md:text-lg text-white/90">{activeSection === "reports" ? "Upload reports and review AI-assisted analysis" : "Manage your personal information and health data"}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left side - Profile Card */}
-          <div className={`${activeSection === "reports" ? "hidden" : "block"} lg:block lg:col-span-1`}>
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl dark:shadow-gray-900/50 p-6 border-2 border-gray-100 dark:border-gray-700 sticky top-8 hover:shadow-3xl transition-all duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-pink-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
-              <div className="relative z-10">
-                <div className="flex flex-col w-full justify-center items-center">
-                  <div className="relative mb-6">
-                    <div className="absolute inset-0 bg-gradient-to-r from-btn2 to-btn1 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                    <img
-                      className="rounded-full w-32 h-32 object-cover shadow-2xl border-4 border-white relative z-10 group-hover:scale-110 transition-transform duration-300"
-                      src={values.image}
-                      alt="Profile"
-                    />
-                    <div className="absolute bottom-2 right-2 bg-gradient-to-br from-green-400 to-green-600 w-8 h-8 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
-                    <div className="absolute -top-2 -right-2 bg-gradient-to-br from-yellow-400 to-orange-500 w-6 h-6 rounded-full border-2 border-white shadow-md"></div>
-                  </div>
-                  <h1 className="font-extrabold text-2xl mt-2 text-gray-800 dark:text-gray-100 group-hover:text-btn2 transition-colors">{values.name || "User"}</h1>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 font-medium flex items-center gap-2 mt-1">
-                    <FaEnvelope className="text-btn2" />
-                    {values.email}
-                  </p>
-                </div>
-                <div className="mt-6 space-y-3">
-                  {[
-                    { field: "age", icon: FaBirthdayCake, colorClass: "bg-blue-100", iconClass: "text-blue-600" },
-                    { field: "gender", icon: FaUser, colorClass: "bg-purple-100", iconClass: "text-purple-600" },
-                    { field: "phoneNumber", icon: FaPhone, colorClass: "bg-green-100", iconClass: "text-green-600" },
-                    { field: "address", icon: FaMapMarkerAlt, colorClass: "bg-red-100", iconClass: "text-red-600" },
-                  ].map(({ field, icon: Icon, colorClass, iconClass }) => (
-                    <div key={field} className="p-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-700/50 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-btn2 hover:shadow-md transition-all duration-300 group/item">
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className={`${colorClass} p-1.5 rounded-lg`}>
-                          <Icon className={`${iconClass} text-sm`} />
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 font-bold">
-                          {field.charAt(0).toUpperCase() + field.slice(1)}
-                        </p>
-                      </div>
-                      <p className="text-sm text-gray-800 dark:text-gray-200 font-semibold ml-8">
-                        {values[field] || "Not set"}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right side */}
-          <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-gray-800 rounded-lg md:rounded-2xl shadow-sm md:shadow-2xl dark:shadow-gray-900/50 p-3 md:p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300">
-              <div className="flex mb-4 md:mb-8 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg border border-gray-200 dark:border-gray-600">
-                {[
-                  { name: "about", icon: FaUser, label: "About" },
-                  { name: "reports", icon: FaFileMedical, label: "Reports" },
-                  { name: "health", icon: FaHeartbeat, label: "Health" },
-                ].map(({ name, icon: Icon, label }) => (
-                  <button
-                    key={name}
-                    onClick={() => setActiveSection(name)}
-                    className={`flex-1 p-2 md:p-4 rounded-lg font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
-                      activeSection === name
-                        ? "bg-gradient-to-r from-btn2 to-btn1 text-white shadow-xl scale-105"
-                        : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    <Icon className={activeSection === name ? "text-white" : "text-gray-500 dark:text-gray-400"} />
-                    {label}
-                  </button>
-                ))}
-              </div>
-              
-              {activeSection === "about" && renderAboutSection()}
-              {activeSection === "reports" && renderReportsSection()}
-              {activeSection === "health" && renderHealthSection()}
-            </div>
-          </div>
+        <div className="mx-auto max-w-4xl">
+          {activeSection === "about" ? renderAboutSection() : renderReportsSection()}
         </div>
       </div>
 
@@ -820,7 +724,7 @@ const renderHealthSection = () => {
           onClose={() => setShowAnalysisModal(false)} 
         />
       )}
-    </div>
+    </main>
   );
 }
 

@@ -12,24 +12,11 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Chatbot = lazy(() => import("./components/Chatbox"));
-const PredictDisease = lazy(() => import("./pages/PredictDisease"));
-const Appointments = lazy(() => import("./pages/Appointments"));
-const Articles = lazy(() => import("./pages/Articles"));
 const Profile = lazy(() => import("./pages/Profile"));
-const HealthTools = lazy(() => import("./pages/HealthTools"));
 const HealthDashboard = lazy(() => import("./pages/HealthDashboard"));
-const PredictionHistoryPage = lazy(() => import("./pages/PredictionHistoryPage"));
-const VirtualDoctor = lazy(() => import("./pages/VirtualDoctor"));
-const Medications = lazy(() => import("./pages/Medications"));
-const SymptomTimeline = lazy(() => import("./pages/SymptomTimeline"));
 const HealthReport = lazy(() => import("./pages/HealthReport"));
-const FamilyProfiles = lazy(() => import("./pages/FamilyProfiles"));
 const DoctorDirectory = lazy(() => import("./pages/DoctorDirectory"));
-const AppointmentCalendar = lazy(() => import("./pages/AppointmentCalendar"));
-const Gamification = lazy(() => import("./pages/Gamification"));
 const ExportData = lazy(() => import("./pages/ExportData"));
-const TwoFactorSettings = lazy(() => import("./pages/TwoFactorSettings"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const MedicineStore = lazy(() => import("./pages/MedicineStore"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const UserAgreement = lazy(() => import("./pages/UserAgreement"));
@@ -94,7 +81,7 @@ function PageLoader() {
 // ✅ PROTECTED ROUTE COMPONENT
 function ProtectedRoute({ children }) {
   const { loggedIn } = useAuth();
-  return loggedIn || IS_NATIVE ? children : <Navigate to="/login" replace />;
+  return loggedIn ? children : <Navigate to="/login" replace />;
 }
 
 // ✅ PUBLIC ROUTE COMPONENT (Redirects if logged in)
@@ -116,18 +103,19 @@ function PageTransition({ children }) {
 
 function App() {
   const { isDark } = useTheme();
+  const { loggedIn } = useAuth();
 
   return (
     <>
       <AppShell>
       <ErrorBoundary>
         <Suspense fallback={<PageLoader />}>
-        <Chatbot />
+        {loggedIn && <Chatbot />}
         
         <PageTransition>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={IS_NATIVE ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+            <Route path="/" element={IS_NATIVE ? <Navigate to={loggedIn ? "/dashboard" : "/login"} replace /> : <HomePage />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<UserAgreement />} />
             
@@ -160,33 +148,6 @@ function App() {
             />
             
             <Route
-              path="/predict"
-              element={
-                <ProtectedRoute>
-                  <PredictDisease />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/book"
-              element={
-                <ProtectedRoute>
-                  <Appointments />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/article"
-              element={
-                <ProtectedRoute>
-                  <Articles />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
               path="/profile"
               element={
                 <ProtectedRoute>
@@ -196,64 +157,10 @@ function App() {
             />
             
             <Route
-              path="/tools"
-              element={
-                <ProtectedRoute>
-                  <HealthTools />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/history"
-              element={
-                <ProtectedRoute>
-                  <PredictionHistoryPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/virtual-doctor"
-              element={
-                <ProtectedRoute>
-                  <VirtualDoctor />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/medications"
-              element={
-                <ProtectedRoute>
-                  <Medications />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/timeline"
-              element={
-                <ProtectedRoute>
-                  <SymptomTimeline />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
               path="/report"
               element={
                 <ProtectedRoute>
                   <HealthReport />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/family"
-              element={
-                <ProtectedRoute>
-                  <FamilyProfiles />
                 </ProtectedRoute>
               }
             />
@@ -268,37 +175,10 @@ function App() {
             />
 
             <Route
-              path="/calendar"
-              element={
-                <ProtectedRoute>
-                  <AppointmentCalendar />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/achievements"
-              element={
-                <ProtectedRoute>
-                  <Gamification />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
               path="/export"
               element={
                 <ProtectedRoute>
                   <ExportData />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/security"
-              element={
-                <ProtectedRoute>
-                  <TwoFactorSettings />
                 </ProtectedRoute>
               }
             />
@@ -315,15 +195,6 @@ function App() {
             <Route
               path="/more"
               element={<ProtectedRoute><More /></ProtectedRoute>}
-            />
-
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
             />
 
             {/* 404 Route */}

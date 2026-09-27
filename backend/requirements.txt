@@ -13,17 +13,10 @@ pymongo
 # Authentication & Security
 bcrypt
 python-jose[cryptography]
-pyotp
-qrcode[pil]
 
 # Email
 aiosmtplib
 mailtrap
-
-# ML Models
-numpy
-scikit-learn
-pandas
 
 # Image Processing
 Pillow
@@ -36,9 +29,6 @@ email-validator
 
 # Environment
 python-dotenv
-
-# LiveKit (token generation only)
-livekit-api
 
 # Rate Limiting
 slowapi

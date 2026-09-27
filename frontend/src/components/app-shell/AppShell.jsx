@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { App } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
 import { toast } from "react-toastify";
@@ -7,10 +7,9 @@ import { useAuth } from "../../context/AuthContext";
 import NavBar from "../NavBar";
 import BottomNavigation from "./BottomNavigation";
 import MobileTopBar from "./MobileTopBar";
-import OfflineBanner from "./OfflineBanner";
 import { IS_NATIVE } from "../../utils/runtime";
 
-const publicRoutes = new Set(["/", "/login", "/signup", "/privacy", "/terms"]);
+const publicRoutes = new Set(["/", "/login", "/signup"]);
 const primaryRoutes = new Set(["/dashboard", "/profile", "/doctors", "/medicine-store", "/more"]);
 
 export default function AppShell({ children }) {
@@ -18,8 +17,7 @@ export default function AppShell({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const lastBackPress = useRef(0);
-  const showAppChrome = (loggedIn || IS_NATIVE) && !publicRoutes.has(location.pathname);
-  const showGuestBanner = IS_NATIVE && !loggedIn && showAppChrome;
+  const showAppChrome = loggedIn && !publicRoutes.has(location.pathname);
   const hideNativePublicHeader = IS_NATIVE && publicRoutes.has(location.pathname);
 
   useEffect(() => {
@@ -50,8 +48,6 @@ export default function AppShell({ children }) {
     <div className={showAppChrome ? "app-shell app-shell--authenticated" : "app-shell"}>
       <div className={hideNativePublicHeader ? "hidden" : showAppChrome ? "hidden lg:block" : "block"}><NavBar /></div>
       {showAppChrome && <MobileTopBar />}
-      <OfflineBanner />
-      {showGuestBanner && <div className="guest-banner"><span>Guest mode: explore freely; sign in to use personal data.</span><Link to="/login">Sign in</Link></div>}
       <div className="app-shell__content">{children}</div>
       {showAppChrome && <BottomNavigation />}
     </div>

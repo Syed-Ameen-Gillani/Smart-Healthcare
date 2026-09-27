@@ -95,8 +95,3 @@ export async function authenticatedFetch(url, options = {}) {
   return response;
 }
 
-export function getNotificationsWebSocketUrl() {
-  const wsBase = API_BASE_URL.replace(/^http/, "ws");
-  if (!accessToken) return `${wsBase}/ws/notifications`;
-  return `${wsBase}/ws/notifications?token=${encodeURIComponent(accessToken)}`;
-}

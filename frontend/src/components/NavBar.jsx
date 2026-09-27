@@ -4,38 +4,22 @@ import { CiMenuFries } from "react-icons/ci";
 import { RxCross2 } from "react-icons/rx";
 import { FaHome } from "react-icons/fa";  // ✅ FaHome is in 'fa', not 'fa6'
 import { FaMoon, FaSun } from "react-icons/fa6";
-import { MdLanguage } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import NotificationBell from "./NotificationBell";
 
 function NavBar() {
   const { loggedIn, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const menuItems = [
     { id: 0, name: t("nav.home"), link: "/" },
     { id: 1, name: t("nav.dashboard"), link: "/dashboard" },
-    { id: 2, name: t("nav.predictDisease"), link: "/predict" },
-    { id: 3, name: t("nav.predictionHistory"), link: "/history" },
-    { id: 4, name: t("nav.bookAppointments"), link: "/book" },
-    { id: 5, name: t("nav.healthTools"), link: "/tools" },
-    { id: 6, name: t("nav.readArticles"), link: "/article" },
-    { id: 7, name: t("nav.virtualDoctor"), link: "/virtual-doctor" },
-    { id: 8, name: t("nav.medications"), link: "/medications" },
-    { id: 9, name: t("nav.timeline"), link: "/timeline" },
-    { id: 10, name: t("nav.report"), link: "/report" },
-    { id: 11, name: t("nav.familyProfiles"), link: "/family" },
-    { id: 12, name: t("nav.doctors"), link: "/doctors" },
-    { id: 13, name: t("nav.calendar"), link: "/calendar" },
-    { id: 14, name: t("nav.achievements"), link: "/achievements" },
-    { id: 15, name: t("nav.exportData"), link: "/export" },
-    { id: 16, name: t("nav.security"), link: "/security" },
-    { id: 17, name: t("nav.admin"), link: "/admin" },
-    { id: 18, name: "Demo Medicine Store", link: "/medicine-store" },
+    { id: 2, name: "Reports & Profile", link: "/profile" },
+    { id: 3, name: t("nav.doctors"), link: "/doctors" },
+    { id: 4, name: "Demo Medicine Store", link: "/medicine-store" },
   ];
 
   const [isOpen, setIsOpen] = useState(false);
@@ -155,7 +139,6 @@ function NavBar() {
 
       {loggedIn ? (
         <div className="flex items-center">
-          <NotificationBell />
           <Link to="/profile">
             <motion.button 
               whileTap={{ scale: 0.8 }}
@@ -174,15 +157,6 @@ function NavBar() {
             className="md:mx-2 mx-1 border-2 md:px-3 md:py-2 px-2 py-1 rounded-full border-btn1 cursor-pointer text-sm hover:bg-red-500 hover:text-white hover:border-red-500 dark:text-gray-200 dark:border-btn1/50 dark:hover:border-red-500 transition-all duration-200 font-semibold"
           >
             {t("nav.logout")}
-          </motion.button>
-          <motion.button
-            onClick={() => i18n.changeLanguage(i18n.language === "en" ? "hi" : "en")}
-            whileTap={{ scale: 0.9 }}
-            className="md:mx-1 mx-0.5 border-2 md:px-2.5 md:py-2 px-2 py-1 rounded-full border-gray-300 dark:border-gray-600 cursor-pointer text-xs hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-300 transition-all duration-200 font-semibold flex items-center gap-1"
-            title={i18n.language === "en" ? "हिन्दी में बदलें" : "Switch to English"}
-          >
-            <MdLanguage className="text-sm" />
-            {i18n.language === "en" ? "HI" : "EN"}
           </motion.button>
           <motion.button
             onClick={toggleTheme}
@@ -211,15 +185,6 @@ function NavBar() {
               {t("nav.register")}
             </motion.button>
           </Link>
-          <motion.button
-            onClick={() => i18n.changeLanguage(i18n.language === "en" ? "hi" : "en")}
-            whileTap={{ scale: 0.9 }}
-            className="md:mx-1 mx-0.5 border-2 md:px-2.5 md:py-2 px-2 py-1 rounded-full border-gray-300 dark:border-gray-600 cursor-pointer text-xs hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-300 transition-all duration-200 font-semibold flex items-center gap-1"
-            title={i18n.language === "en" ? "हिन्दी में बदलें" : "Switch to English"}
-          >
-            <MdLanguage className="text-sm" />
-            {i18n.language === "en" ? "HI" : "EN"}
-          </motion.button>
           <motion.button
             onClick={toggleTheme}
             whileTap={{ scale: 0.9 }}

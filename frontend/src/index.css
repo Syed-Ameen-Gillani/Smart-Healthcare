@@ -621,6 +621,15 @@ body {
   min-height: 100dvh;
 }
 
+.app-fullscreen-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--safe-top);
+  bottom: 0;
+  height: calc(100dvh - var(--safe-top));
+}
+
 .mobile-top-bar {
   position: sticky;
   top: 0;
@@ -657,7 +666,7 @@ html.dark .mobile-top-bar {
   place-items: center;
   border-radius: 8px;
   color: white;
-  background: #0e7490;
+  background: linear-gradient(110deg, #2563eb, #0891b2);
   font-size: 12px;
   font-weight: 800;
 }
@@ -724,13 +733,13 @@ html.dark .mobile-bottom-nav {
 }
 
 .mobile-bottom-nav__item.is-active {
-  color: #0e7490;
-  background: #ecfeff;
+  color: #2563eb;
+  background: #eff6ff;
 }
 
 html.dark .mobile-bottom-nav__item.is-active {
-  color: #67e8f9;
-  background: rgba(8, 145, 178, 0.16);
+  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.16);
 }
 
 .app-page {
@@ -765,50 +774,80 @@ html.dark .mobile-bottom-nav__item.is-active {
   border-bottom: 0;
 }
 
-.offline-banner {
-  position: sticky;
-  top: 0;
-  z-index: 55;
-  padding: 8px 16px;
-  background: #92400e;
-  color: #ffffff;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 700;
+.smart-health-splash {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 32px;
+  background: #f8fafc;
+  color: #123047;
 }
 
-.guest-banner {
-  position: sticky;
-  top: calc(var(--app-top-bar-height) + var(--safe-top));
-  z-index: 38;
-  min-height: 36px;
-  padding: 7px 12px;
+.smart-health-splash__brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: #ecfeff;
-  border-bottom: 1px solid #a5f3fc;
-  color: #164e63;
-  font-size: 12px;
-  font-weight: 700;
   text-align: center;
+  animation: splash-reveal 500ms ease-out both;
 }
 
-.guest-banner a {
-  flex-shrink: 0;
-  color: #0e7490;
-  text-decoration: underline;
+.smart-health-splash__logo {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  margin-bottom: 18px;
 }
 
-html.dark .guest-banner {
-  background: #083344;
-  border-color: #155e75;
-  color: #cffafe;
+.smart-health-splash h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 800;
 }
 
-.app-shell--authenticated .offline-banner {
-  top: calc(var(--app-top-bar-height) + var(--safe-top));
+.smart-health-splash p {
+  margin: 8px 0 0;
+  color: #526575;
+  font-size: 14px;
+}
+
+.smart-health-splash__progress {
+  position: absolute;
+  bottom: calc(38px + env(safe-area-inset-bottom, 0px));
+  width: min(180px, 48vw);
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #dbe5ea;
+}
+
+.smart-health-splash__progress span {
+  display: block;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(110deg, #2563eb, #0891b2);
+  animation: splash-progress 1.1s ease-in-out infinite;
+}
+
+html.dark .smart-health-splash {
+  background: #111827;
+  color: #f8fafc;
+}
+
+html.dark .smart-health-splash p {
+  color: #a9b8c5;
+}
+
+@keyframes splash-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes splash-progress {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(240%); }
 }
 
 html.dark .app-list-row {

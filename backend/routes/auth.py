@@ -97,18 +97,6 @@ async def login(credentials: LoginRequest):
         logger.warning("Login rejected")
         raise HTTPException(status_code=401, detail=result["message"])
 
-    user_doc = await db.store.find_one({"email": credentials.email})
-    if user_doc and user_doc.get("totp_verified"):
-        logger.info("Login requires two-factor verification")
-        return JSONResponse(
-            content=jsonable_encoder(
-                standard_response(
-                    message="2FA verification required",
-                    data={"requires_2fa": True, "email": credentials.email},
-                )
-            )
-        )
-
     # Prepare response data
     response_data = standard_response(
         message=result["message"],

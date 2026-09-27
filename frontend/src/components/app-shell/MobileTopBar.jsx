@@ -1,10 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
-import { FaSignInAlt } from "react-icons/fa";
-import NotificationBell from "../NotificationBell";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { FaArrowLeft, FaMoon, FaSun } from "react-icons/fa";
+import { useTheme } from "../../context/ThemeContext";
 
 const routeTitles = {
   "/dashboard": "Home",
@@ -12,21 +9,10 @@ const routeTitles = {
   "/doctors": "Doctors",
   "/medicine-store": "Demo Store",
   "/more": "More",
-  "/predict": "Disease Prediction",
-  "/history": "Prediction History",
-  "/book": "Appointments",
-  "/calendar": "Calendar",
-  "/tools": "Health Tools",
-  "/article": "Health Articles",
-  "/virtual-doctor": "Virtual Doctor",
-  "/medications": "Medications",
-  "/timeline": "Health Timeline",
   "/report": "Health Report",
-  "/family": "Family Profiles",
-  "/achievements": "Achievements",
   "/export": "Export Data",
-  "/security": "Security",
-  "/admin": "Admin",
+  "/privacy": "Privacy Policy",
+  "/terms": "User Agreement",
 };
 
 const rootRoutes = new Set(["/dashboard", "/profile", "/doctors", "/medicine-store", "/more"]);
@@ -34,7 +20,7 @@ const rootRoutes = new Set(["/dashboard", "/profile", "/doctors", "/medicine-sto
 export default function MobileTopBar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { loggedIn } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const title = routeTitles[location.pathname] || "Smart Health";
   const showBack = !rootRoutes.has(location.pathname);
 
@@ -48,7 +34,11 @@ export default function MobileTopBar() {
         ) : <span className="mobile-top-bar__mark" aria-hidden="true">SH</span>}
       </div>
       <h1 className="mobile-top-bar__title">{title}</h1>
-      <div className="mobile-top-bar__side mobile-top-bar__side--end">{loggedIn ? <NotificationBell /> : <Link to="/login" className="app-icon-button" aria-label="Sign in"><FaSignInAlt /></Link>}</div>
+      <div className="mobile-top-bar__side mobile-top-bar__side--end">
+        <button type="button" onClick={toggleTheme} className="app-icon-button" aria-label={isDark ? "Use light theme" : "Use dark theme"}>
+          {isDark ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
+        </button>
+      </div>
     </header>
   );
 }
