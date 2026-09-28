@@ -131,6 +131,30 @@ API docs are available at:
 
 The backend loads configuration from local environment variables or a local `.env` file. Keep real database URLs, Gemini keys, JWT secrets, and deployment settings out of Git. The required settings are defined in `backend/config/settings.py`.
 
+Example local `.env` template:
+
+```env
+# Local database or your own private Atlas URI. Do not commit the real value.
+MONGO_URI=mongodb://localhost:27017/helloai
+MONGO_DBNAME=helloai
+
+# Use a long random value in real deployments.
+SECRET_KEY=replace_with_a_long_random_secret
+
+# Use your own Gemini key locally. Do not commit the real value.
+GEMINI_API_KEY=replace_with_your_gemini_api_key
+
+# Optional admin account for seed/create-only demo endpoints.
+ADMIN_EMAIL=admin@example.com
+
+# Add only trusted frontend/mobile origins for your environment.
+ALLOWED_ORIGINS=http://localhost:5173,capacitor://localhost,https://localhost
+
+ENV=development
+LOG_LEVEL=INFO
+PORT=8000
+```
+
 Uploads are written to `uploads/`. The configured maximum upload size is 10 MB. Allowed extensions are `pdf`, `png`, `jpg`, `jpeg`, `gif`, `doc`, `docx`, and `txt`; Gemini analysis is run for PDF and image uploads.
 
 ## Frontend Setup
