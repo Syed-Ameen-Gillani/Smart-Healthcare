@@ -148,11 +148,6 @@ ADMIN_EMAIL=admin@example.com
 # Optional CORS additions, comma-separated
 ALLOWED_ORIGINS=http://localhost:5173,capacitor://localhost,https://localhost
 
-# Optional email/contact settings
-SMTP_EMAIL=your_sender@example.com
-SMTP_PASSWORD=your_password_or_token
-SMTP_FROM_NAME=AI Health Care Platform
-
 # Optional runtime/logging
 ENV=development
 LOG_LEVEL=INFO
@@ -339,7 +334,7 @@ Useful manual checks before an FYP demo:
 
 - `atlas-credentials.env`, `.env`, and other secret files must stay ignored and local.
 - Secrets belong in backend environment variables only.
-- Frontend and Android builds must never include MongoDB, Gemini, SMTP, or JWT secret values.
+- Frontend and Android builds must never include MongoDB, Gemini, or JWT secret values.
 - `SECRET_KEY` is mandatory in production.
 - CORS should be restricted to deployed frontend/mobile origins in production.
 - AI-generated report analysis must be presented as support information, not medical diagnosis.
