@@ -135,8 +135,8 @@ Example local `.env` template:
 
 ```env
 # Local database or your own private Atlas URI. Do not commit the real value.
-MONGO_URI=mongodb://localhost:27017/helloai
-MONGO_DBNAME=helloai
+MONGO_URI=replace_with_your_local_or_private_mongodb_uri
+MONGO_DBNAME=replace_with_your_database_name
 
 # Use a long random value in real deployments.
 SECRET_KEY=replace_with_a_long_random_secret
@@ -148,7 +148,7 @@ GEMINI_API_KEY=replace_with_your_gemini_api_key
 ADMIN_EMAIL=admin@example.com
 
 # Add only trusted frontend/mobile origins for your environment.
-ALLOWED_ORIGINS=http://localhost:5173,capacitor://localhost,https://localhost
+ALLOWED_ORIGINS=replace_with_comma_separated_allowed_origins
 
 ENV=development
 LOG_LEVEL=INFO
