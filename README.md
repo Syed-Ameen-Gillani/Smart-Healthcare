@@ -340,3 +340,7 @@ Useful manual checks before an FYP demo:
 - CORS should be restricted to deployed frontend/mobile origins in production.
 - AI-generated report analysis must be presented as support information, not medical diagnosis.
 - The demo medicine flow is intentionally fictional and should not be connected to real payment or fulfillment without a full product/security review.
+
+## Credits
+
+This project is based on work originally created by [**shubhamprasad318**](https://github.com/shubhamprasad318) in the [AI_health_care](https://github.com/shubhamprasad318/AI_health_care) repository. This version was adapted with feature additions, removals, and project-specific changes for the Smart Health FYP.
