@@ -129,30 +129,7 @@ API docs are available at:
 
 ### Backend Environment
 
-The backend loads environment variables from the repository root `.env` or the process environment.
-
-```env
-# MongoDB
-MONGO_URI=mongodb://localhost:27017/helloai
-MONGO_DBNAME=helloai
-
-# Required in production. In development, a random fallback is generated if missing.
-SECRET_KEY=replace_with_a_strong_secret
-
-# Gemini
-GEMINI_API_KEY=your_gemini_api_key
-
-# Optional admin-only seed/create actions
-ADMIN_EMAIL=admin@example.com
-
-# Optional CORS additions, comma-separated
-ALLOWED_ORIGINS=http://localhost:5173,capacitor://localhost,https://localhost
-
-# Optional runtime/logging
-ENV=development
-LOG_LEVEL=INFO
-PORT=8000
-```
+The backend loads configuration from local environment variables or a local `.env` file. Keep real database URLs, Gemini keys, JWT secrets, and deployment settings out of Git. The required settings are defined in `backend/config/settings.py`.
 
 Uploads are written to `uploads/`. The configured maximum upload size is 10 MB. Allowed extensions are `pdf`, `png`, `jpg`, `jpeg`, `gif`, `doc`, `docx`, and `txt`; Gemini analysis is run for PDF and image uploads.
 
